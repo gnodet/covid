@@ -213,6 +213,23 @@ public class Covid {
                         formatDouble(morts2020.getOrDefault(age, 0) / pyrams.get("2020")[age] * 1000.0 - morts2017.getOrDefault(age, 0) / pyrams.get("2017")[age] * 1000.0)
                         ));
             }
+            writer.write(";\n");
+            writer.write("Tranche;Surmortalite\n");
+            for (int i = 0; i < 100; i += 5) {
+                double morts17 = 0;
+                double vivants17 = 0;
+                double morts20 = 0;
+                double vivants20 = 0;
+                int m = i == 95 ? 100 : i + 4;
+                for (int age = i; age <= m; age++) {
+                    morts17 += morts2017.getOrDefault(age, 0);
+                    morts20 += morts2020.getOrDefault(age, 0);
+                    vivants17 += pyrams.get("2017")[age];
+                    vivants20 += pyrams.get("2020")[age];
+                }
+                String tranche = (i == 95) ? "95+" : "'" + i + " - " + m;
+                writer.write(tranche + ";" + formatDouble((morts20/vivants20-morts17/vivants17)*1000.0) + "\n");
+            }
         }
     }
 
